@@ -515,9 +515,11 @@ add_filter( 'woocommerce_webhook_http_args', function ( $args ) {
  * before anyone opens WooCommerce → Settings → Emails.
  * ------------------------------------------------------------------------- */
 
-add_filter( 'woocommerce_email_subject_customer_processing_order', function () {
-	return 'Vaša porudžbina u Danči Shop-u je primljena! (#{order_number})';
-} );
+// Runs after WooCommerce's placeholder replacement, so build the number here.
+add_filter( 'woocommerce_email_subject_customer_processing_order', function ( $subject, $order ) {
+	$number = $order ? $order->get_order_number() : '';
+	return 'Vaša porudžbina u Danči Shop-u je primljena! (#' . $number . ')';
+}, 10, 2 );
 
 add_filter( 'woocommerce_email_heading_customer_processing_order', function () {
 	return 'Hvala na porudžbini!';
