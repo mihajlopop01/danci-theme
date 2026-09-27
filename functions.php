@@ -526,3 +526,30 @@ add_filter( 'woocommerce_email_heading_customer_processing_order', function () {
 add_filter( 'woocommerce_email_footer_text', function () {
 	return 'Danči Shop · dancishop.com';
 } );
+
+/* ---------------------------------------------------------------------------
+ * Outgoing mail over SMTP (Gmail, for now).
+ * Hostinger's PHP mail() fails for this site, so wp_mail() logs in to Gmail.
+ * Address and App Password are NOT in the theme (this repo is on GitHub) —
+ * they live in wp-config.php on the server as DANCI_SMTP_USER / DANCI_SMTP_PASS.
+ * Without them, nothing changes.
+ * ------------------------------------------------------------------------- */
+
+add_action( 'phpmailer_init', function ( $phpmailer ) {
+	if ( ! defined( 'DANCI_SMTP_USER' ) || ! defined( 'DANCI_SMTP_PASS' ) ) {
+		return;
+	}
+	$phpmailer->isSMTP();
+	$phpmailer->Host       = 'smtp.gmail.com';
+	$phpmailer->Port       = 587;
+	$phpmailer->SMTPSecure = 'tls';
+	$phpmailer->SMTPAuth   = true;
+	$phpmailer->Username   = DANCI_SMTP_USER;
+	$phpmailer->Password   = DANCI_SMTP_PASS;
+	$phpmailer->setFrom( DANCI_SMTP_USER, 'Danči Shop', false );
+} );
+
+if ( defined( 'DANCI_SMTP_USER' ) ) {
+	add_filter( 'woocommerce_email_from_address', fn() => DANCI_SMTP_USER );
+}
+add_filter( 'woocommerce_email_from_name', fn() => 'Danči Shop' );
