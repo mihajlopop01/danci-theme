@@ -528,9 +528,9 @@ add_filter( 'woocommerce_email_footer_text', function () {
 } );
 
 /* ---------------------------------------------------------------------------
- * Outgoing mail over SMTP (Gmail, for now).
- * Hostinger's PHP mail() fails for this site, so wp_mail() logs in to Gmail.
- * Address and App Password are NOT in the theme (this repo is on GitHub) —
+ * Outgoing mail over SMTP (Titan Mail, danci@themerchpack.com).
+ * Hostinger's PHP mail() fails for this site, so wp_mail() logs in to Titan.
+ * Address and password are NOT in the theme (this repo is on GitHub) —
  * they live in wp-config.php on the server as DANCI_SMTP_USER / DANCI_SMTP_PASS.
  * Without them, nothing changes.
  * ------------------------------------------------------------------------- */
@@ -540,7 +540,7 @@ add_action( 'phpmailer_init', function ( $phpmailer ) {
 		return;
 	}
 	$phpmailer->isSMTP();
-	$phpmailer->Host       = 'smtp.gmail.com';
+	$phpmailer->Host       = 'smtp.titan.email';
 	$phpmailer->Port       = 587;
 	$phpmailer->SMTPSecure = 'tls';
 	$phpmailer->SMTPAuth   = true;
