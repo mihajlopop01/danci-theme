@@ -758,7 +758,7 @@ body > main { flex: 1 0 auto; }
 	}
 	.d-header--checkout { justify-content: space-between; }
 
-	.d-hero { height: 170px; object-fit: cover; object-position: 50% 50%; }
+	.d-hero { display: none; }
 	.d-band { flex-direction: column; align-items: stretch; gap: 16px; padding: 28px 20px; }
 	.d-band__title { font-size: 32px; line-height: 1.05; }
 	.d-band__sub { font-size: 15px; }
