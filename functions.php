@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DANCI_VERSION', '1.0.0' );
+define( 'DANCI_VERSION', '1.0.1' );
 
 /* ---------------------------------------------------------------------------
  * Setup & assets
@@ -501,11 +501,28 @@ add_filter( 'woocommerce_order_number', function ( $order_number, $order ) {
 	return $order->get_meta( '_danci_order_number' ) ?: $order_number;
 }, 10, 2 );
 
-// Google Apps Script answers every POST with a 302; without following it,
-// WooCommerce logs a failed delivery and disables the webhook after 5.
-add_filter( 'woocommerce_webhook_http_args', function ( $args ) {
-	$args['redirection'] = 5;
-	return $args;
+// Google Apps Script answers every POST with a 302 once the row is written, and
+// WooCommerce counts a 302 as delivered. Never make WordPress follow it (no
+// 'redirection' in woocommerce_webhook_http_args): it repeats the request as a GET
+// that still carries the JSON body, Google answers 400, and after 6 such
+// "failures" WooCommerce disables the webhook while the rows still get written.
+
+// The invoicing system reads "Način plaćanja" from the sheet and needs exactly
+// this text for pouzećem, whatever the gateway's title says.
+add_filter( 'woocommerce_webhook_payload', function ( $payload, $resource ) {
+	if ( 'order' === $resource && isset( $payload['payment_method'] ) && 'cod' === $payload['payment_method'] ) {
+		$payload['payment_method_title'] = 'Plaćanje pouzećem';
+	}
+	return $payload;
+}, 10, 2 );
+
+// A disabled webhook stops filling the sheet without any sign, so tell the owner.
+add_action( 'woocommerce_webhook_disabled_due_delivery_failures', function ( $webhook_id ) {
+	wp_mail(
+		'popovic.mihajlo1@gmail.com',
+		'Webhook za Google Sheet je ISKLJUČEN: ' . home_url(),
+		'WooCommerce je isključio webhook ' . $webhook_id . ' na ' . home_url() . ' posle više neuspešnih slanja. Nove porudžbine ne idu u "Sve Porudžbine" dok se ne uključi ponovo (WooCommerce → Podešavanja → Napredno → Webhooks).'
+	);
 } );
 
 /* ---------------------------------------------------------------------------
