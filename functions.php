@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DANCI_VERSION', '1.0.1' );
+define( 'DANCI_VERSION', '1.0.2' );
 
 /* ---------------------------------------------------------------------------
  * Setup & assets
@@ -507,11 +507,17 @@ add_filter( 'woocommerce_order_number', function ( $order_number, $order ) {
 // that still carries the JSON body, Google answers 400, and after 6 such
 // "failures" WooCommerce disables the webhook while the rows still get written.
 
-// The invoicing system reads "Način plaćanja" from the sheet and needs exactly
-// this text for pouzećem, whatever the gateway's title says.
+// The invoicing app reads "Način plaćanja" from the sheet by exact text:
+// "Plaćanje pouzećem" and "Kartica" are the only values it knows, anything
+// else becomes cash on the fiscal invoice. So send those, whatever the
+// gateway's own title says.
 add_filter( 'woocommerce_webhook_payload', function ( $payload, $resource ) {
-	if ( 'order' === $resource && isset( $payload['payment_method'] ) && 'cod' === $payload['payment_method'] ) {
-		$payload['payment_method_title'] = 'Plaćanje pouzećem';
+	$titles = array(
+		'cod'       => 'Plaćanje pouzećem',
+		'corvuspay' => 'Kartica',
+	);
+	if ( 'order' === $resource && isset( $payload['payment_method'], $titles[ $payload['payment_method'] ] ) ) {
+		$payload['payment_method_title'] = $titles[ $payload['payment_method'] ];
 	}
 	return $payload;
 }, 10, 2 );
