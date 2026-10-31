@@ -3,9 +3,14 @@ Theme Name: Danci
 Theme URI: https://dancishop.com
 Description: Danci Shop theme, built from the Claude Design handoff. Classic PHP templates + theme.json tokens; all styles live in assets/css/danci.css.
 Author: Danci
-Version: 1.0.3
+Version: 1.0.4
 Requires at least: 6.4
 Requires PHP: 8.0
 License: GPLv2 or later
 Text Domain: danci
 */
+
+/* Footer credits (copyright bar) */
+.cg-credits{display:inline-block;margin-left:10px;font-size:.92em;opacity:.85}
+.cg-credits a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+@media (max-width:640px){.cg-credits{display:block;margin:4px 0 0}}

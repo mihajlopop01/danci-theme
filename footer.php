@@ -53,12 +53,12 @@ $links = function ( $items ) {
 				<a href="<?php echo esc_url( $instagram ); ?>">Instagram @danchy_official</a>
 			</div>
 		</div>
-		<div class="d-footer__bottom">© <?php echo esc_html( gmdate( 'Y' ) ); ?> Danči Shop</div>
+		<div class="d-footer__bottom">© <?php echo esc_html( gmdate( 'Y' ) ); ?> Danči Shop <span class="cg-credits">Powered by <a href="https://creatorgoods.co/" target="_blank" rel="noopener">Creator Goods</a><span class="cg-credits__sep"> · </span>Designed by <a href="https://starkstudio.rs/" target="_blank" rel="noopener">Stark Studio</a></span></div>
 	</footer>
 	<?php get_template_part( 'template-parts/drawer' ); ?>
 <?php elseif ( 'bar' === $variant ) : ?>
 	<footer class="d-footbar">
-		<span>© <?php echo esc_html( gmdate( 'Y' ) ); ?> Danči Shop</span>
+		<span>© <?php echo esc_html( gmdate( 'Y' ) ); ?> Danči Shop <span class="cg-credits">Powered by <a href="https://creatorgoods.co/" target="_blank" rel="noopener">Creator Goods</a><span class="cg-credits__sep"> · </span>Designed by <a href="https://starkstudio.rs/" target="_blank" rel="noopener">Stark Studio</a></span></span>
 		<div class="d-footbar__links"><?php $links( array( $help_links[0], $help_links[1], $contact ) ); ?></div>
 	</footer>
 <?php endif; ?>
