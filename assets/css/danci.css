@@ -997,3 +997,8 @@ body > main { flex: 1 0 auto; }
 	.d-page__card { padding: 24px 18px; border-radius: 20px; }
 	.d-page__title { font-size: 32px; }
 }
+
+/* Footer credits (copyright bar) */
+footer .cg-credits{display:inline-block;margin-left:10px;font-size:.92em;opacity:.85}
+footer .cg-credits a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+@media (max-width:640px){footer .cg-credits{display:block;margin:4px 0 0}}
