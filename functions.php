@@ -588,3 +588,15 @@ if ( defined( 'DANCI_SMTP_USER' ) ) {
 add_filter( 'woocommerce_email_from_name', fn() => 'Danči Shop' );
 require_once __DIR__ . '/cg-tracker.php'; // Creator Goods site tracker (Analitika)
 require_once __DIR__ . '/cg-emails.php'; // Creator Goods customer emails (Serbian, tracking in the completed mail)
+
+/**
+ * Purge the LiteSpeed page cache once after a deploy that changes footer.php,
+ * so cached pages don't keep showing the old footer.
+ */
+add_action( 'init', function () {
+	$hash = md5_file( get_template_directory() . '/footer.php' );
+	if ( get_option( 'cg_footer_hash' ) !== $hash ) {
+		update_option( 'cg_footer_hash', $hash );
+		do_action( 'litespeed_purge_all' );
+	}
+} );
